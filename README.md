@@ -2,7 +2,7 @@
 
 ## Introduction
 
-TODO Describe what your plugin does here
+This is a jenkins plugin,listener all job start,end and error event,then pushing to who use;
 
 ## Getting started
 
