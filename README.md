@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This is a jenkins plugin,listener all job start,end and error event,then pushing to who use;
+全局job通知工具
 
 ## Getting started
 

@@ -5,12 +5,11 @@ import hudson.EnvVars;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Util;
-import hudson.model.Descriptor;
 import hudson.model.Run;
 import hudson.model.TaskListener;
 import hudson.model.listeners.RunListener;
-import hudson.tasks.Builder;
 import hudson.util.LineEndingConversion;
+import hudson.util.LogTaskListener;
 import jenkins.model.Jenkins;
 import org.apache.commons.io.IOUtils;
 
@@ -22,10 +21,12 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Extension
 public class JobNotifyListener extends RunListener<Run<?, ?>> {
+	private static final Logger log = Logger.getLogger(JobNotifyListener.class.getName());
 
 	/**
 	 * 参考CommandInterpreter
@@ -38,9 +39,29 @@ public class JobNotifyListener extends RunListener<Run<?, ?>> {
 	public void onStarted(Run<?, ?> run, TaskListener listener) {
 		Jenkins jenkins = Jenkins.get();
 		JobNotifyConfig notifyConfig = jenkins.getDescriptorByType(JobNotifyConfig.class);
+		String command = notifyConfig.getOnStartedCmd();
 		PrintStream logger = listener.getLogger();
 		logger.println("global job notify");
-		String command = notifyConfig.getOnStartedCmd();
+		executeCommand(run, listener, command, logger);
+	}
+
+
+	@Override
+	public void onFinalized(Run<?, ?> run) {
+		try {
+			Jenkins jenkins = Jenkins.get();
+			JobNotifyConfig notifyConfig = jenkins.getDescriptorByType(JobNotifyConfig.class);
+			String command = notifyConfig.getOnCompletedCmd();
+			LogTaskListener listener = new LogTaskListener(log, Level.INFO);
+			run.getEnvironment(listener);
+			executeCommand(run, listener, command, listener.getLogger());
+		} catch (Exception e) {
+			log.log(Level.INFO, e.getMessage());
+		}
+	}
+
+
+	private void executeCommand(Run<?, ?> run, TaskListener listener, String command, PrintStream logger) {
 		File comandFile = null;
 		ProcessBuilder pb = new ProcessBuilder();
 		pb.redirectErrorStream(true);
@@ -63,6 +84,7 @@ public class JobNotifyListener extends RunListener<Run<?, ?>> {
 			if (convertCommand == null) {
 				return;
 			}
+			logger.println(String.join(" ", pb.command()));
 			try (FileOutputStream fileOutputStream = new FileOutputStream(comandFile)) {
 				IOUtils.write(convertCommand, fileOutputStream, StandardCharsets.UTF_8);
 			}
@@ -96,7 +118,7 @@ public class JobNotifyListener extends RunListener<Run<?, ?>> {
 			args.set(0, args.get(0).substring(2));   // trim off "#!"
 			return args.toArray(new String[0]);
 		} else
-			return new String[]{"sh", "-xe", script.getRemote()};
+			return new String[]{"/bin/bash", "-xe", script.getRemote()};
 	}
 
 
