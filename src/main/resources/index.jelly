@@ -1,0 +1,4 @@
+<?jelly escape-by-default='true'?>
+<div>
+    全局监听通知插件
+</div>

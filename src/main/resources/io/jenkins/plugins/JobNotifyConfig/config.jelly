@@ -5,12 +5,15 @@
         <f:entry title="启动时监听shell">
             <f:textarea field="onStartedCmd" value="${descriptor.onStartedCmd}"
                         codemirror-config="mode: 'text/x-sh'"
-                        codemirror-mode="shell"/>
+                        codemirror-mode="shell">
+
+            </f:textarea>
         </f:entry>
         <f:entry title="结束时监听shell">
             <f:textarea field="onCompletedCmd" value="${descriptor.onCompletedCmd}"
                         codemirror-config="mode: 'text/x-sh'"
-                        codemirror-mode="shell"/>
+                        codemirror-mode="shell">
+            </f:textarea>
         </f:entry>
     </f:section>
 </j:jelly>
