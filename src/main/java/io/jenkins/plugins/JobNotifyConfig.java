@@ -13,8 +13,14 @@ import org.slf4j.LoggerFactory;
 public class JobNotifyConfig extends GlobalConfiguration {
     private static final Logger log = LoggerFactory.getLogger(JobNotifyConfig.class);
 
+    /**
+     * 启动时执行的命令
+     */
     private String onStartedCmd;
 
+    /**
+     * 完成时执行的命令
+     */
     private String onCompletedCmd;
 
     public JobNotifyConfig() {

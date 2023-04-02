@@ -46,6 +46,11 @@ public class JobNotifyListener extends RunListener<Run<?, ?>> {
 	}
 
 
+	/**
+	 * 参考CommandInterpreter
+	 *
+	 * @param run The completed build.
+	 */
 	@Override
 	public void onFinalized(Run<?, ?> run) {
 		try {
@@ -61,6 +66,14 @@ public class JobNotifyListener extends RunListener<Run<?, ?>> {
 	}
 
 
+	/**
+	 * 参考CommandInterpreter
+	 *
+	 * @param run      The completed build.
+	 * @param listener The listener for this build. This can be used to produce log messages, for example,
+	 * @param command  The command to execute.
+	 * @param logger   The logger for this build.
+	 */
 	private void executeCommand(Run<?, ?> run, TaskListener listener, String command, PrintStream logger) {
 		File comandFile = null;
 		ProcessBuilder pb = new ProcessBuilder();
@@ -108,6 +121,13 @@ public class JobNotifyListener extends RunListener<Run<?, ?>> {
 		}
 	}
 
+	/**
+	 * 参考CommandInterpreter
+	 *
+	 * @param command The command to execute.
+	 * @param script  The script to execute.
+	 * @return The command line to execute.
+	 */
 	public String[] buildCommandLine(String command, FilePath script) {
 		if (command.startsWith("#!")) {
 			// interpreter override
@@ -122,6 +142,12 @@ public class JobNotifyListener extends RunListener<Run<?, ?>> {
 	}
 
 
+	/**
+	 * 参考CommandInterpreter
+	 *
+	 * @param s The string to add a line feed to.
+	 * @return The string with a line feed added.
+	 */
 	private static String addLineFeedForNonASCII(String s) {
 		if (!s.startsWith("#!")) {
 			if (s.indexOf('\n') != 0) {
@@ -132,16 +158,34 @@ public class JobNotifyListener extends RunListener<Run<?, ?>> {
 		return s;
 	}
 
+	/**
+	 * Called when a build is completed.
+	 *
+	 * @param run      The completed build.
+	 * @param listener The listener for this build. This can be used to produce log messages, for example,
+	 *                 which becomes a part of the "console output" of this build. But when this method runs,
+	 *                 the build is considered completed, so its status cannot be changed anymore.
+	 */
 	@Override
 	public void onCompleted(Run<?, ?> run, @NonNull TaskListener listener) {
 		super.onCompleted(run, listener);
 	}
 
+	/**
+	 * Called when a build is finalized.
+	 *
+	 * @return true to continue with the build completion, false to abort the build.
+	 */
 	public static boolean isUnix() {
 		String osName = System.getProperty("os.name");
 		return osName.toLowerCase().startsWith("linux") || osName.toLowerCase().startsWith("unix");
 	}
 
+	/**
+	 * 判断是否是windows系统
+	 *
+	 * @return true or false
+	 */
 	public static boolean isWindows() {
 		String osName = System.getProperty("os.name");
 		return osName.toLowerCase().startsWith("windows");
