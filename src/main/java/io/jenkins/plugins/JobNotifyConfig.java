@@ -44,6 +44,7 @@ public class JobNotifyConfig extends GlobalConfiguration {
     @DataBoundSetter
     public void setOnStartedCmd(String onStartedCmd) {
         this.onStartedCmd = onStartedCmd;
+        save();
     }
 
     public String getOnCompletedCmd() {
@@ -52,5 +53,6 @@ public class JobNotifyConfig extends GlobalConfiguration {
     @DataBoundSetter
     public void setOnCompletedCmd(String onCompletedCmd) {
         this.onCompletedCmd = onCompletedCmd;
+        save();
     }
 }
