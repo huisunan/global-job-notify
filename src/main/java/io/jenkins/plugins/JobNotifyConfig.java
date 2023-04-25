@@ -23,6 +23,11 @@ public class JobNotifyConfig extends GlobalConfiguration {
      */
     private String onCompletedCmd;
 
+    /**
+     * 错误执行命令
+     */
+    private String onErrorCmd;
+
     public JobNotifyConfig() {
         load();
     }
@@ -54,5 +59,15 @@ public class JobNotifyConfig extends GlobalConfiguration {
     public void setOnCompletedCmd(String onCompletedCmd) {
         this.onCompletedCmd = onCompletedCmd;
         save();
+    }
+
+    @DataBoundSetter
+    public void setOnErrorCmd(String onErrorCmd) {
+        this.onErrorCmd = onErrorCmd;
+        save();
+    }
+
+    public String getOnErrorCmd() {
+        return onErrorCmd;
     }
 }

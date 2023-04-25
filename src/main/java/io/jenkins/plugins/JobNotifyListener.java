@@ -5,6 +5,7 @@ import hudson.EnvVars;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Util;
+import hudson.model.Result;
 import hudson.model.Run;
 import hudson.model.TaskListener;
 import hudson.model.listeners.RunListener;
@@ -53,16 +54,7 @@ public class JobNotifyListener extends RunListener<Run<?, ?>> {
 	 */
 	@Override
 	public void onFinalized(Run<?, ?> run) {
-		try {
-			Jenkins jenkins = Jenkins.get();
-			JobNotifyConfig notifyConfig = jenkins.getDescriptorByType(JobNotifyConfig.class);
-			String command = notifyConfig.getOnCompletedCmd();
-			LogTaskListener listener = new LogTaskListener(log, Level.INFO);
-			run.getEnvironment(listener);
-			executeCommand(run, listener, command, listener.getLogger());
-		} catch (Exception e) {
-			log.log(Level.INFO, e.getMessage());
-		}
+
 	}
 
 
@@ -168,6 +160,21 @@ public class JobNotifyListener extends RunListener<Run<?, ?>> {
 	 */
 	@Override
 	public void onCompleted(Run<?, ?> run, @NonNull TaskListener listener) {
+		try {
+			Jenkins jenkins = Jenkins.get();
+			JobNotifyConfig notifyConfig = jenkins.getDescriptorByType(JobNotifyConfig.class);
+			String command;
+			Result result = run.getResult();
+			if (result == Result.FAILURE) {
+				command = notifyConfig.getOnErrorCmd();
+			} else {
+				command = notifyConfig.getOnCompletedCmd();
+			}
+			run.getEnvironment(listener);
+			executeCommand(run, listener, command, listener.getLogger());
+		} catch (Exception e) {
+			log.log(Level.INFO, e.getMessage());
+		}
 		super.onCompleted(run, listener);
 	}
 

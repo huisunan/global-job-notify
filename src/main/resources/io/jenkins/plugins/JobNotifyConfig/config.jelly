@@ -15,5 +15,12 @@
                         codemirror-mode="shell">
             </f:textarea>
         </f:entry>
+
+        <f:entry title="结束时监听shell">
+            <f:textarea field="onErrorCmd" value="${descriptor.onErrorCmd}"
+                        codemirror-config="mode: 'text/x-sh'"
+                        codemirror-mode="shell">
+            </f:textarea>
+        </f:entry>
     </f:section>
 </j:jelly>
