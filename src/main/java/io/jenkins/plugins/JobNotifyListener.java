@@ -10,7 +10,6 @@ import hudson.model.Run;
 import hudson.model.TaskListener;
 import hudson.model.listeners.RunListener;
 import hudson.util.LineEndingConversion;
-import hudson.util.LogTaskListener;
 import jenkins.model.Jenkins;
 import org.apache.commons.io.IOUtils;
 
@@ -25,6 +24,13 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * 任务执行监听器
+ * <p>
+ * 参考CommandInterpreter
+ * 参考
+ * </p>
+ */
 @Extension
 public class JobNotifyListener extends RunListener<Run<?, ?>> {
 	private static final Logger log = Logger.getLogger(JobNotifyListener.class.getName());
